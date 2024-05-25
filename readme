@@ -1,0 +1,9 @@
+passport.config: se agrego el cart al usuario.
+
+se agrego el ID al "ID Carrito"
+
+ahora se puede ver el carrito en la vista de productos
+
+se pueden eliminar los productos del carrito
+
+se agrego el boton de comprar al carrito

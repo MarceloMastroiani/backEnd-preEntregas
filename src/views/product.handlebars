@@ -1,0 +1,64 @@
+<div>
+    <h1>Bienvenido/a</h1>
+    <p>{{user.first_name}}</p>
+    <p>{{user.email}}</p>
+    <p>{{user.age}}</p>
+     <p>ID Carrito: {{user.cart._id}}</p>
+    <p>Rol: {{user.role}}</p>
+
+    <a href="/api/sessions/logout"><button>Logout</button></a>
+</div>
+
+<br>
+<hr>
+
+ <div>
+    <h2>Cart</h2>
+    {{#each cart.products}}
+        <p>{{this.product.title}}</p>
+        <p>{{this.product.description}}</p>
+        <p> Cantidad {{this.quantity}} </p> 
+        <p>${{this.product.price}}</p>
+
+        <button onclick="deleteFromCart('{{../user.cart._id}}','{{this.product._id}}')">Remover</button> </p>
+    {{/each}}
+    <a href='/carts/{{user.cart._id}}'><button> Ir a carrito </button></a>
+    {{!-- <button onclick="purchaseCart('{{user.cart}}')" class="btn">Realizar Compra</button> --}}
+</div>
+
+<br>
+<hr>
+
+{{#if isValid}}
+<h1 class="title">Productos</h1>
+<div class="productListContainer">
+    {{#each docs}}
+        <ul class="productList">
+            <li>Nombre: {{this.title}}</li>
+            <li>Descripcion: {{this.description}} </li>
+            <li>Precio: ${{this.price}} </li>
+            <li>Stock: {{this.stock}}</li>
+            <br/>
+            <button onclick="addToCart('{{../user.cart._id}}', '{{this._id}}')" class="btn">Agregar al carrito</button>
+        </ul>
+    {{/each}}
+    
+</div>
+<br/>
+<hr>
+<div>
+    {{#if hasPrevPage}}
+        <a href={{this.prevLink}}><< Anterior</a>
+    {{/if}}
+    &nbsp;
+    {{this.page}}
+    &nbsp;
+     {{#if hasNextPage}}
+        <a href={{this.nextLink}}>Siguiente >></a>
+    {{/if}} 
+</div>
+{{else}}
+<h2>No hay productos para mostrar</h2>
+{{/if}}
+
+<script src="/js/products.js"></script>
