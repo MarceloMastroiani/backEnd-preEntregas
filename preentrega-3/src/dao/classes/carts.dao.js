@@ -1,4 +1,9 @@
 import cartModel from "../models/carts.js";
+import Product from "./products.dao.js";
+import Ticket from "./ticket.dao.js";
+
+const productService = new Product();
+const ticketService = new Ticket();
 
 export default class Cart {
   constructor() {
@@ -92,4 +97,38 @@ export default class Cart {
     });
     await cartModel.updateOne({ _id: cid }, cart);
   };
+  purchase = async (cid, email) => {
+    const cart = await this.getCartById(cid);
+
+    const notPurchasedIds = [];
+    let totalAmount = 0;
+
+    for (let i = 0; i < cart.products.length; i++) {
+      const item = cart.products[i]; //TODO: arreglar error de sintaxis
+      const remainder = item.product.stock - item.quantity;
+      if (remainder >= 0) {
+        await productService.updateProduct(item.product._id, {
+          ...item.product,
+          stock: remainder,
+        });
+        await this.deleteProduct(cid, item.product._id.toString());
+        totalAmount += item.quantity * item.product.price;
+      } else {
+        notPurchasedIds.push(item.product._id);
+      }
+    }
+
+    if (totalAmount > 0) {
+      await ticketService.generate(email, totalAmount);
+    }
+
+    return notPurchasedIds;
+  };
+  /*
+  - Verifica y actualiza el stock de cada producto.
+  - Elimina productos del carrito si se compran.
+  - Calcula el monto total de la compra.
+  - Genera un ticket si hubo una compra efectiva.
+  - Devuelve los IDs de los productos que no se pudieron comprar debido a la falta de stock.
+  */
 }

@@ -60,8 +60,9 @@ export const viewProducts = async (req, res) => {
 export const viewCarts = async (req, res) => {
   const { cid } = req.params;
   try {
+    const user = req.session.user;
     const response = await cartService.getCartById(cid);
-    res.render("cart", { response });
+    res.render("cart", { response, user });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

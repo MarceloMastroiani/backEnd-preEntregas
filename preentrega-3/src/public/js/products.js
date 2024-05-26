@@ -9,8 +9,8 @@ const addToCart = (cartId, productId) => {
   });
 };
 
-const purchaseCart = (cartId) => {
-  fetch(`/api/carts/${cartId}/purchase`, {
+const purchaseCart = (cartId, email) => {
+  fetch(`/api/carts/${cartId}/${email}/purchase`, {
     method: "GET",
   }).then((res) => {
     if (res.status == 200) {

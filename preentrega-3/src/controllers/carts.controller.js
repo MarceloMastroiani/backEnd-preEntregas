@@ -1,3 +1,4 @@
+import userModel from "../dao/models/users.js";
 import { cartService, productService } from "../repositories/index.js";
 
 export const cartByIdd = async (req, res) => {
@@ -37,8 +38,6 @@ export const cartAddProduct = async (req, res) => {
 
 export const cartDeleteProduct = async (req, res) => {
   let { cid, pid } = req.params;
-  // let cid = req.params.cid;
-  // let pid = req.params.pid;
 
   let result = await cartService.deleteProduct(cid, pid);
 
@@ -78,5 +77,21 @@ export const updatCart = async (req, res) => {
     res.send(updatedProducts);
   } else {
     res.send("Carrito no encontrado");
+  }
+};
+
+export const purchase = async (req, res) => {
+  const { cid } = req.params;
+  const { email } = req.params;
+
+  try {
+    const remainingProducts = await cartService.purchase(cid, email);
+    console.log(remainingProducts, "remainingProducts");
+    res.send({ status: "success", payload: remainingProducts });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(error.status || 500)
+      .send({ status: "error", error: error.message });
   }
 };

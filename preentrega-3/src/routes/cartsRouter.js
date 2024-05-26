@@ -7,7 +7,9 @@ import {
   cartDeleteAll,
   updatQuantity,
   updatCart,
+  purchase,
 } from "../controllers/carts.controller.js";
+import { privateAccess } from "../middlewares/privateAuth.js";
 //import checkRole from "../middlewares/checkRole.middlewares.js";
 
 const cartsRouter = express.Router();
@@ -32,5 +34,7 @@ cartsRouter.put("/:cid/products/:pid", updatQuantity);
 
 //ACTUALIZAR CARRITO
 cartsRouter.put("/:cid", updatCart);
+
+cartsRouter.get("/:cid/:email/purchase", purchase);
 
 export default cartsRouter;

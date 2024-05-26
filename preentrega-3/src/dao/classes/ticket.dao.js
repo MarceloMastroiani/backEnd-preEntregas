@@ -1,4 +1,4 @@
-import ticketModel from "../models/ticket";
+import ticketModel from "../models/ticket.js";
 
 export default class Ticket {
   constructor() {
@@ -13,8 +13,8 @@ export default class Ticket {
     return await ticketModel.findOne({ _id: id }).lean();
   };
 
-  create = async (item) => {
-    return await ticketModel.create(item);
+  createTicket = async (ticket) => {
+    return await ticketModel.create(ticket);
   };
 
   update = async (id, item) => {
@@ -23,5 +23,18 @@ export default class Ticket {
 
   delete = async (id) => {
     return await ticketModel.deleteOne({ _id: id });
+  };
+
+  generate = async (email, totalAmount) => {
+    if (typeof this.createTicket !== "function") {
+      throw new TypeError("this.createTicket is not a function");
+    }
+    const ticket = await this.createTicket({
+      code: `${Math.random()}`,
+      purchase_datetime: new Date().toLocaleString(),
+      amount: totalAmount,
+      purchaser: email,
+    });
+    return ticket;
   };
 }
